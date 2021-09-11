@@ -29,6 +29,9 @@ axios.interceptors.request.use(function (config) {
 
 // 跨域
 app.use((req, res, next) => {
+    // 允许客户端出现跨域发送请求时携带cookie
+    res.header('Access-Control-Allow-Credentials', true);
+
     res.header('Access-Control-Allow-Origin', '*');
     res.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Accept");
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');

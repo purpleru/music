@@ -2,9 +2,19 @@
 var baseURL = location.origin;
 
 $(document).ajaxSend(function (evt, request, settings) {
-    settings.url = baseURL.replace(/\/*$/,'') + settings.url;
+    settings.xhrFields = {
+        withCredentials: true
+    }
+
+    settings.url = baseURL.replace(/\/*$/, '') + settings.url;
 });
 
+$.ajax({
+    url: '/info',
+    error: function () {
+        baseURL = 'http://demo.wgudu.com:3006';
+    }
+});
 
 // 提示 success info warning danger
 function tip(msg, type) {
