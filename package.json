@@ -1,0 +1,27 @@
+{
+  "name": "music",
+  "version": "1.0.0",
+  "description": "网易云一键打卡是一个能够快速帮助您的网易云音乐账号升级的程序。",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "网易云签到",
+    "网易云一键签到",
+    "网易云刷等级",
+    "网易云签到打卡",
+    "网易云一键签到打卡",
+    "网易云一键听歌"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.4",
+    "cheerio": "^1.0.0-rc.10",
+    "cookie": "^0.4.1",
+    "express": "^4.17.1",
+    "set-cookie-parser": "^2.4.8"
+  },
+  "devDependencies": {}
+}

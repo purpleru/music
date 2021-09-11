@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <meta name="description" content="网易云一键打卡是一个能够快速帮助您的网易云音乐账号升级的程序。" />
+    <meta name="keywords" content="网易云签到,网易云一键签到,网易云一键打卡,网易云一键打卡签到" />
+    <meta name="author" content="孤独的小丑" />
+    <title>网易云一键签到打卡，网易云一键听歌快速账号升级!</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/index.css">
+</head>
+
+<body>
+    <div id="app">
+        <br>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h2 class="panel-title">微笑着面对生活</h2>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="alert alert-warning life" role="alert">
+                            <p>我们虽然改变不了世界，但我们可以跟着世界去改变。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <i class="glyphicon glyphicon-question-sign pull-right" data-toggle="modal" data-target="#myModal"></i>
+                <h2 class="panel-title">登录账号</h2>
+            </div>
+            <div class="panel-body">
+                <div class="alert alert-info alert-tip" role="alert">
+                    暂时只支持手机号登录，邮箱的请绑定手机哦~
+                </div>
+                <form id="login-form">
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon">账号</span>
+                            <input type="text" placeholder="请输入手机号" maxlength="11" name="username" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon">密码</span>
+                            <input type="password" placeholder="请输入密码" name="password" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div id="savePassword" class="checkbox">
+                            <label>
+                                <input type="checkbox" value="">
+                                <span>记住密码</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <input type="submit" class="btn btn-primary btn-block" value="登录" />
+                </form>
+
+                <div id="my-core">
+                    <div id="show-info">
+                    </div>
+                    <!-- Button trigger modal -->
+                    <button id="sign" type="button" class="btn btn-primary btn-block">签 到</button>
+                    <button id="song" type="button" class="btn btn-primary btn-block">一键听歌</button>
+                    <button id="logout" type="button" class="btn btn-danger btn-block">退出登录</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" tabindex="-1" role="dialog" id="myModal">
+            <div class="modal-dialog" role="document" aria-hidden="false">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">使用说明</h4>
+                    </div>
+                    <div class="modal-body">
+                        <b>登录步骤</b>
+                        <p>
+                            注册网易云账号 > 绑定手机号 > 使用手机号和密码进行登录
+                        </p>
+                        <b>听歌量：</b>
+                        <p>
+                            听歌量是指累计播放的歌曲数量而非播放次数，并且实际播放时间过短的歌曲将不纳入计算，每天最多计算300首。
+                        </p>
+                        <b>登录天数：</b>
+                        <p>
+                            登录天数是指使用云音乐的天数，在多端同时使用不会被重复计算。
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">我知道了</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h2 class="panel-title">关于本程序</h2>
+            </div>
+            <div class="panel-body">
+                <p>
+                    我是一名正在找一份前端实习工作的递砖生，本程序虽然没有多大的出众，但这也是我一个成长的过程。
+                    <em>(麻雀虽小，五脏俱全。)</em>
+                </p>
+
+                <p>
+                    如果您觉得本程序对你有所帮助请到 <a href="https://gitee.com/wgudu/music" target="_blank"
+                        class="alert-link">Gitee</a> 帮我<strong> star </strong> 一下，您的支持和鼓励就是我最大的收获，谢谢。
+                </p>
+            </div>
+            <div class="list-group">
+                <button type="button" class="list-group-item">
+                    <p> Q:我的账号安全吗？</p>
+                    <p>
+                        A:密码是计算MD5加密上传到服务器，谁都看不到密码。
+                    </p>
+                </button>
+                <button type="button" class="list-group-item">
+                    <p>Q:这个程序是干嘛的？</p>
+                    <p>
+                        A:网易云音乐一键签到，一键听满300首歌，刷等级。
+                    </p>
+                </button>
+                <button type="button" class="list-group-item">
+                    <p>Q:使用这个会影响我的听歌风格吗？</p>
+                    <p>
+                        A:刷的歌都来自您的每日推荐歌单，不影响。
+                    </p>
+                </button>
+                <button type="button" class="list-group-item">
+                    <p>Q:为什么我关注了陌生人？</p>
+                    <p>
+                        A:关注的是作者，仅用作统计，介意可以取关。
+                    </p>
+                </button>
+                <button type="button" class="list-group-item">
+                    <p>Q:为什么点击刷歌打卡只刷了一部分？</p>
+                    <p>
+                        A:这是网易云官方问题,您可以多点击几次。
+                    </p>
+                </button>
+            </div>
+        </div>
+    </div>
+    <script type="text/html" id="info">
+        <p>
+            <img src="{{avatar}}" class="center-block img-circle" width="60" height="60" alt="...">
+        </p>
+        <p class="text-center text-muted">{{uname}}</p>
+        <ul class="list-group">
+            <li class="list-group-item clearfix">
+                <span class="label label-info pull-right">{{song}}首</span>
+                <span>累计听歌</span>
+            </li>
+            <li class="list-group-item clearfix">
+                <span class="label label-primary pull-right">LV{{level}}</span>
+                <span>当前等级</span>
+            </li>
+            <li class="list-group-item clearfix">
+                <span class="label label-primary pull-right">LV{{level + 1}}</span>
+                <span>距离下一等级</span>
+            </li>
+            <li class="list-group-item  clearfix list-group-item">
+                <div class="layout-container">
+                    <span class="label label-success pull-right">{{needDay.val}}天</span>
+                    <span>还需要登录</span>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{needDay.progress}}"
+                        aria-valuemin="0" aria-valuemax="100" style="width: {{needDay.progress}};">
+                        {{needDay.progress}}
+                    </div>
+                </div>
+            </li>
+            <li class="list-group-item clearfix list-group-item">
+                <div class="layout-container">
+                    <span class="label label-success pull-right">{{needSong.val}}首</span>
+                    <span>还需要听歌</span>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{needSong.progress}}"
+                        aria-valuemin="0" aria-valuemax="100" style="width: {{needSong.progress}};">
+                        {{needSong.progress}}
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </script>
+    <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/art-template/4.13.2/lib/template-web.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/js-cookie/latest/js.cookie.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="/js/index.js" type="text/javascript"></script>
+</body>
+
+</html>

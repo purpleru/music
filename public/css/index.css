@@ -1,0 +1,41 @@
+html,
+body,
+#app {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+#app {
+    max-width: 750px;
+    padding: 0 16px;
+    margin: 0 auto;
+    background: url('/img/sur.jpg') no-repeat center;
+    background-size: cover;
+    overflow: auto;
+}
+
+.life {
+    margin-bottom: 0;
+}
+
+button {
+    outline: none;
+}
+
+.alert-tip {
+    /* display: none; */
+    text-align: center;
+}
+
+#my-core {
+    display: none;
+}
+
+.progress {
+    margin: 0;
+}
+
+.layout-container {
+    margin-bottom: 10px;
+}
