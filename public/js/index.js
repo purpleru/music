@@ -2,19 +2,9 @@
 var baseURL = location.origin;
 
 $(document).ajaxSend(function (evt, request, settings) {
-    settings.xhrFields = {
-        withCredentials: true
-    }
-
     settings.url = baseURL.replace(/\/*$/, '') + settings.url;
 });
 
-$.ajax({
-    url: '/info',
-    error: function () {
-        baseURL = 'http://demo.wgudu.com:3006';
-    }
-});
 
 // 提示 success info warning danger
 function tip(msg, type) {
@@ -68,6 +58,10 @@ $('#login-form').on('submit', function () {
         if (result.ret === 0) {
             $.ajax('/login', {
                 url: '/login',
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
                 beforeSend: function () {
                     tip('正在登录中，请稍后...', 'info');
                     $('[type="submit"]').attr('disabled', true);
@@ -85,6 +79,7 @@ $('#login-form').on('submit', function () {
                     $('[type="submit"]').attr('disabled', false);
                 }
             });
+
         } else if (result.ret === 2) {
             tip('请完成验证码操作');
         }
