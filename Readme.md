@@ -8,9 +8,11 @@
   - `art-template`
 - 项目后端技术点
   - `express`
-  - `cheerio`
-  - `axios`
-  - `cookie`
+- 项目更新说明
+  - 2021/9/24
+    - 废弃之前的所有Api接口，采用全新Api架构。
+    - 支持PHP环境部署，把 `public` 文件夹里面的文件放在PHP服务器即可。
+    - 去除后端 `axios` `set-cookie-parser` `cheerio` 等第三方依赖包。
 
 ## 开始使用
 

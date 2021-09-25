@@ -157,49 +157,40 @@
     </div>
     <script type="text/html" id="info">
         <p>
-            <img src="{{avatar}}" class="center-block img-circle" width="60" height="60" alt="...">
+            <img src="{{profile.avatarUrl}}" class="center-block img-circle" width="60" height="60" alt="...">
         </p>
-        <p class="text-center text-muted">{{uname}}</p>
+        <p class="text-center text-muted">{{profile.nickname}}</p>
         <ul class="list-group">
             <li class="list-group-item clearfix">
-                <span class="label label-info pull-right">{{song}}首</span>
+                <span class="label label-info pull-right">{{profile.userId}}</span>
+                <span>账号ID</span>
+            </li>
+            <li class="list-group-item clearfix">
+                <span class="label label-primary pull-right">
+                    {{if profile.gender== '0'}}
+                        未设置
+                    {{else if profile.gender == '1'}}
+                        男
+                    {{else}}
+                        女
+                    {{/if}}
+                </span>
+                <span>性别Gender</span>
+            </li>
+            <li class="list-group-item clearfix">
+                <span class="label label-primary pull-right">{{listenSongs}}首</span>
                 <span>累计听歌</span>
             </li>
-            <li class="list-group-item clearfix">
-                <span class="label label-primary pull-right">LV{{level}}</span>
-                <span>当前等级</span>
+            <li class="list-group-item  clearfix">
+                <span class="pull-right">{{profile.description || '王侯将相，宁有种呼？'}}</span>
+                <span>个性签名</span>
             </li>
             <li class="list-group-item clearfix">
-                <span class="label label-primary pull-right">LV{{level + 1}}</span>
-                <span>距离下一等级</span>
-            </li>
-            <li class="list-group-item  clearfix list-group-item">
-                <div class="layout-container">
-                    <span class="label label-success pull-right">{{needDay.val}}天</span>
-                    <span>还需要登录</span>
-                </div>
-                <div class="progress">
-                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{needDay.progress}}"
-                        aria-valuemin="0" aria-valuemax="100" style="width: {{needDay.progress}};">
-                        {{needDay.progress}}
-                    </div>
-                </div>
-            </li>
-            <li class="list-group-item clearfix list-group-item">
-                <div class="layout-container">
-                    <span class="label label-success pull-right">{{needSong.val}}首</span>
-                    <span>还需要听歌</span>
-                </div>
-                <div class="progress">
-                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{needSong.progress}}"
-                        aria-valuemin="0" aria-valuemax="100" style="width: {{needSong.progress}};">
-                        {{needSong.progress}}
-                    </div>
-                </div>
+                <span class="label label-success pull-right">{{level}}级</span>
+                    <span>账号等级</span>
             </li>
         </ul>
     </script>
-    <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/art-template/4.13.2/lib/template-web.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/js-cookie/latest/js.cookie.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

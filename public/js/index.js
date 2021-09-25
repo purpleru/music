@@ -1,8 +1,14 @@
 
-var baseURL = location.origin;
+var baseURL = 'http://tools.wgudu.com:3000';
 
 $(document).ajaxSend(function (evt, request, settings) {
-    settings.url = baseURL.replace(/\/*$/, '') + settings.url;
+    var token = window.localStorage.getItem('token');
+
+    var url = new URL(baseURL.replace(/\/*$/, '') + settings.url);
+    url.searchParams.set('version', '2.0');
+    url.searchParams.set('token', token);
+
+    settings.url = url.toString();
 });
 
 
@@ -53,69 +59,76 @@ $('#login-form').on('submit', function () {
         return false;
     }
 
-    var captcha1 = new TencentCaptcha('2035560721', function (result) {
+    var token = window.localStorage.getItem('token');
 
-        if (result.ret === 0) {
-            $.ajax('/login', {
-                url: '/login',
-                xhrFields: {
-                    withCredentials: true
-                },
-                crossDomain: true,
-                beforeSend: function () {
-                    tip('正在登录中，请稍后...', 'info');
-                    $('[type="submit"]').attr('disabled', true);
-                },
-                data: {
-                    username: $('[name="username"]').val(),
-                    password: $('[name="password"]').val(),
-                    Randstr: result.randstr,
-                    Ticket: result.ticket
-                },
-                type: 'post',
-                success: login,
-                error: function () {
-                    tip('登录失败，服务器错误!');
-                    $('[type="submit"]').attr('disabled', false);
-                }
-            });
+    var uname = $('[name="username"]').val(),
+        password = $('[name="password"]').val();
 
-        } else if (result.ret === 2) {
-            tip('请完成验证码操作');
+    $.get({
+        url: '/login/b',
+        data: {
+            token: token
+        },
+        beforeSend: function () {
+            tip('正在登录中,请稍后...', 'info');
+            $('[type="submit"]').prop('disabled', true);
+        },
+        success: function (data) {
+            if (data.code === 200) {
+                window.localStorage.setItem('token', data.token);
+                login(token, {
+                    phone: uname,
+                    password: password
+                });
+            } else {
+                tip(data.msg);
+                $('[type="submit"]').prop('disabled', false);
+            }
+        },
+        error: function () {
+            tip('登录失败，服务器错误!');
+            $('[type="submit"]').prop('disabled', false);
         }
-
-        // console.log(result);
     });
-
-    captcha1.show();
 
     return false;
 });
 
 
-
 // 登录
-function login(data) {
+function login(token, params) {
+    $.ajax({
+        url: '/login/phone?token=' + token,
+        type: 'post',
+        data: params,
+        success: function (data) {
 
-    var isSvaePassword = $('[type="checkbox"]').prop('checked');
+            var profile;
 
-    if (data.status === 1) {
-        info();
-        $('#login-form').hide();
-        $('#my-core').fadeIn(300);
-        tip(data.msg || '登录成功！', 'success');
-        $('[type="submit"]').attr('disabled', false);
+            if (data.token) {
+                window.localStorage.setItem('token', data.token);
+            }
 
-        if (isSvaePassword) {
-            user({
-                uname: $('[name="username"]').val(),
-                password: $('[name="password"]').val()
-            });
+            if (data.code === 200) {
+                profile = data.profile;
+                user(Object.assign({ isLogin: true, userId: profile.userId, nickname: profile.nickname }, params));
+                info();
+                $('#login-form').hide();
+                $('#my-core').fadeIn(300);
+                tip('登录成功', 'info');
+                window.localStorage.setItem('account', JSON.stringify(data.account));
+                window.sessionStorage.setItem('info', JSON.stringify(profile));
+            } else {
+                tip(data.msg || '登录失败,请稍后再试!');
+            }
+            console.log(data);
+            $('[type="submit"]').prop('disabled', false);
+        },
+        error: function () {
+            tip('登录失败，服务器错误!');
+            $('[type="submit"]').prop('disabled', false);
         }
-    } else {
-        tip(data.msg || '登录失败，请使用手机号登录');
-        $('[type="submit"]').attr('disabled', false);
-    }
+    })
 }
 
 // 信息
@@ -123,24 +136,32 @@ function info() {
 
     $('.alert-tip').hide();
 
+    var userInfo = user();
+
     var info = window.sessionStorage.getItem('info');
 
     try {
-        info = JSON.parse(info);
+        if (typeof info === 'string') {
+            info = JSON.parse(info);
+        }
     } catch (err) {
         info = null;
     }
 
     if (info) {
         $('#show-info').html(template('info', info));
+        tip(info.msg || '欢迎再次使用，' + userInfo.nickname, 'info');
     } else {
 
-        $.get('/info', function (data) {
+        $.get('/user/detail?userId=' + userInfo.userId, function (data) {
             if (data.code === 200) {
                 $('#show-info').html(template('info', data));
+                if (data.msg) {
+                    tip(data.msg, 'info');
+                }
                 window.sessionStorage.setItem('info', JSON.stringify(data));
             } else {
-                tip('获取信息失败');
+                tip(data.msg || '获取信息失败');
             }
 
         });
@@ -158,20 +179,31 @@ function init() {
 
     var userInfo = user();
 
-    $('[name="username"]').val(userInfo.uname);
+    var token = window.localStorage.getItem('token');
+
+    if (userInfo.isLogin) {
+        info();
+        $('#login-form').hide();
+        $('#my-core').fadeIn(300);
+    }else{
+        $('#login-form').show();
+        $('#my-core').hide();
+    }
+
+    $('[name="username"]').val(userInfo.phone);
     $('[type="checkbox"]').prop('checked', userInfo.checked);
     if (userInfo.checked) {
         $('[name="password"]').val(userInfo.password);
     }
 
-    if (Cookies.get('ylnwyy_token')) {
-        $('#login-form').hide();
-        $('#my-core').show();
-        info();
-    } else {
-        $('#login-form').show();
-        $('#my-core').hide();
+    if (!token) {
+        $.get('/login/d', function (data) {
+            if (data.code === 200) {
+                window.localStorage.setItem('token', data.token);
+            }
+        });
     }
+
 }
 
 init();
@@ -182,7 +214,7 @@ function sign() {
     var _this = this;
 
     $.ajax({
-        url: '/sign',
+        url: '/signin',
         beforeSend: function () {
             $(_this).attr('disabled', true);
             tip('正在签到中，请稍后...', 'info');
@@ -190,10 +222,10 @@ function sign() {
         success: function (data) {
             $(_this).attr('disabled', false);
 
-            if (data.status === 1 && data.code === 200) {
-                tip('签到成功', 'success');
+            if (data.code === 200) {
+                tip('签到成功，EX+' + data.point, 'success');
             } else {
-                tip('签到失败,请稍后重试!');
+                tip('签到失败，' + data.msg);
             }
 
         }
@@ -206,7 +238,7 @@ function song() {
     var _this = this;
 
     $.ajax({
-        url: '/song',
+        url: '/scrobble',
         beforeSend: function () {
             $(_this).attr('disabled', true);
             tip('正在努力听歌中，请稍后...', 'info');
@@ -214,10 +246,10 @@ function song() {
         success: function (data) {
             $(_this).attr('disabled', false);
 
-            if (data.status === 1 && data.code === 200) {
-                tip('一键听歌成功', 'success');
+            if (data.code === 200) {
+                tip('一键听歌成功，本次听歌共' + data.song_detail.length + '首歌曲', 'success');
             } else {
-                tip('一键听歌成功,请稍后重试!');
+                tip(data.msg || '一键听歌失败,请稍后重试!');
             }
 
         }
@@ -229,7 +261,11 @@ function logout() {
 
     if (window.confirm('是否确定退出账号登录？')) {
         $.get('/logout', function (data) {
-            Cookies.remove('ylnwyy_token');
+            console.log(data);
+            
+            user({
+                isLogin: false
+            });
             window.sessionStorage.removeItem('info');
             init();
             tip('暂时只支持手机号登录，邮箱的请绑定手机哦~', 'info')
