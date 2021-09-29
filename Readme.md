@@ -17,4 +17,4 @@
 ## 开始使用
 
 - 拉取本项目 => 下载依赖包 `npm install` => 启动项目 `npm run start` 或者 `node server.js`
-- 演示地址：[http://demo.wgudu.com:3006](http://demo.wgudu.com:3006)
+- 演示地址：[http://demo.wgudu.com](http://demo.wgudu.com:3006)
