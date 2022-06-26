@@ -5,12 +5,74 @@ $(document).ajaxSend(function (evt, request, settings) {
     var token = window.localStorage.getItem('token');
 
     var url = new URL(baseURL.replace(/\/*$/, '') + settings.url);
-    url.searchParams.set('version', '2.0');
+    url.searchParams.set('version', '2.3');
     url.searchParams.set('token', token);
 
     settings.url = url.toString();
 });
 
+var captchaIns;
+initNECaptcha({
+    element: '#captchaIns',
+    captchaId: '73a18dc827b24b18ad0783701a75277d',
+    mode: 'popup',
+    width: '320px',
+    enableClose: false,
+    maxVerification: 8,
+    onClose: function () {
+    },
+    onReady: function (instance) {
+    },
+    onVerify: verify
+}, function load(instance) {
+    // 初始化成功后得到验证实例instance，可以调用实例的方法
+    captchaIns = instance
+}, function error(err) {
+    alert('网络错误!');
+});
+
+function verify(err, verifyData) {
+
+    if (err) return false;
+
+    var state = captchaIns._captchaIns.$store.state;
+
+    var token = window.localStorage.getItem('token');
+
+    var uname = $('[name="username"]').val(),
+        password = $('[name="password"]').val();
+
+    $.get({
+        url: '/login/b',
+        data: {
+            token: token
+        },
+        beforeSend: function () {
+            tip('正在登录中,请稍后...', 'info');
+            $('[type="submit"]').prop('disabled', true);
+        },
+        success: function (data) {
+
+            if (data.code === 200) {
+                window.localStorage.setItem('token', data.token);
+                login(data.token || token, {
+                    phone: uname,
+                    password: password,
+                    secureCaptcha: verifyData.validate,
+                    fp: state.fingerprint
+                });
+            } else {
+                tip(data.msg);
+                $('[type="submit"]').prop('disabled', false);
+            }
+        },
+        error: function () {
+            tip('登录失败，服务器错误!');
+            $('[type="submit"]').prop('disabled', false);
+        }
+    });
+
+}
 
 // 提示 success info warning danger
 function tip(msg, type) {
@@ -48,12 +110,10 @@ function user(data) {
     }
 }
 
-$('#statistics').append(unescape("%3Cspan id='cnzz_stat_icon_1279127574'%3E%3C/span%3E%3Cscript src='https://s4.cnzz.com/z_stat.php%3Fid%3D1279127574%26online%3D1%26show%3Dline' type='text/javascript'%3E%3C/script%3E"));
-
 $('#login-form').on('submit', function () {
 
-    var complete = $(this).serializeArray().some(({ value }) => {
-        return value.trim().length === 0;
+    var complete = $(this).serializeArray().some(({ value, name }) => {
+        return value.trim().length === 0 && name !== 'NECaptchaValidate';
     });
 
     if (complete) {
@@ -61,37 +121,7 @@ $('#login-form').on('submit', function () {
         return false;
     }
 
-    var token = window.localStorage.getItem('token');
-
-    var uname = $('[name="username"]').val(),
-        password = $('[name="password"]').val();
-
-    $.get({
-        url: '/login/b',
-        data: {
-            token: token
-        },
-        beforeSend: function () {
-            tip('正在登录中,请稍后...', 'info');
-            $('[type="submit"]').prop('disabled', true);
-        },
-        success: function (data) {
-            if (data.code === 200) {
-                window.localStorage.setItem('token', data.token);
-                login(token, {
-                    phone: uname,
-                    password: password
-                });
-            } else {
-                tip(data.msg);
-                $('[type="submit"]').prop('disabled', false);
-            }
-        },
-        error: function () {
-            tip('登录失败，服务器错误!');
-            $('[type="submit"]').prop('disabled', false);
-        }
-    });
+    captchaIns.popUp();
 
     return false;
 });
@@ -187,7 +217,7 @@ function init() {
         info();
         $('#login-form').hide();
         $('#my-core').fadeIn(300);
-    }else{
+    } else {
         $('#login-form').show();
         $('#my-core').hide();
     }
@@ -264,7 +294,6 @@ function logout() {
     if (window.confirm('是否确定退出账号登录？')) {
         $.get('/logout', function (data) {
             console.log(data);
-            
             user({
                 isLogin: false
             });

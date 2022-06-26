@@ -1,8 +1,8 @@
 {
   "name": "music",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "网易云一键打卡是一个能够快速帮助您的网易云音乐账号升级的程序。",
-  "main": "index.js",
+  "main": "./server.js",
   "scripts": {
     "start": "node server.js"
   },
@@ -14,7 +14,7 @@
     "网易云一键签到打卡",
     "网易云一键听歌"
   ],
-  "author": "",
+  "author": "孤独的小丑",
   "license": "ISC",
   "dependencies": {
     "cookie": "^0.4.1",
