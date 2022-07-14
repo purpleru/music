@@ -1,6 +1,6 @@
 {
   "name": "music",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "网易云一键打卡是一个能够快速帮助您的网易云音乐账号升级的程序。",
   "main": "./server.js",
   "scripts": {

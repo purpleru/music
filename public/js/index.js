@@ -152,6 +152,7 @@ function login(token, params) {
                 window.sessionStorage.setItem('info', JSON.stringify(profile));
             } else {
                 tip(data.msg || '登录失败,请稍后再试!');
+                captchaIns.refresh();
             }
             console.log(data);
             $('[type="submit"]').prop('disabled', false);
